@@ -1,14 +1,11 @@
-console.log(process.env.mcId)
-console.log(process.env.mcPw)
-
 let connected = false;
 
 var bot;
 
 const mineflayer = require("mineflayer");
-const pathfinder = require('mineflayer-pathfinder').pathfinder
-const Movements = require('mineflayer-pathfinder').Movements
-const { GoalNear } = require('mineflayer-pathfinder').goals
+//const pathfinder = require('mineflayer-pathfinder').pathfinder
+//const Movements = require('mineflayer-pathfinder').Movements
+//const { GoalNear } = require('mineflayer-pathfinder').goals
 //const mineflayerViewer = require("prismarine-viewer").mineflayer;
 const Vec3 = require("vec3");
 
@@ -18,11 +15,10 @@ let messenger;
 client.once('ready', () => {
     messenger = client.channels.cache.get("779936157814226974");
 });
-ownersDiscord = ["386031770216300555", "336830576848011265", "691825225419063348", "712874076888236043", "460071957686386700", "732607078547324989", "625585473842315274", "707941944365678592", "494436764375580695"];
 const JsonBinIoApi = require("jsonbin-io-api");
 const api = new JsonBinIoApi(process.env.jsonToken);
 
-const math = require("mathjs");
+//const math = require("mathjs");
 
 let place = {};
 let owners = {};
@@ -320,7 +316,7 @@ client.on("message", (message) => {
             connected = true;
             bot = mineflayer.createBot({
                 host: "denvers.kro.kr",
-                port: process.env.PORT || 25565,
+                port: 25565,
                 username: process.env.mcId,
                 password: process.env.mcPw,
                 version: false
