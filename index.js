@@ -314,6 +314,7 @@ client.on("message", (message) => {
     if (message.channel.id == "789720071433093180") {
         if (message.content.includes("접속") && !connected) {
             connected = true;
+            message.channel.send("어우 귀찮아");
             bot = mineflayer.createBot({
                 host: "denvers.kro.kr",
                 port: 25565,
@@ -376,6 +377,7 @@ client.on("message", (message) => {
                                 }
                                 break;
                             case /^시다야 나가/.test(message):
+                                bot.chat("개꿀");
                                 connected = false;
                                 bot.quit();
                                 break;
@@ -515,6 +517,7 @@ client.on("message", (message) => {
             });
         } else if (message.content.includes("나가") && connected) {
             connected = false;
+            message.channel.send("개꿀");
             bot.quit();
         }
     }
