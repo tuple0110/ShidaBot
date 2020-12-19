@@ -320,7 +320,7 @@ client.on("message", (message) => {
             connected = true;
             bot = mineflayer.createBot({
                 host: "denvers.kro.kr",
-                port: 25565,
+                port: process.env.PORT || 25565,
                 username: process.env.mcId,
                 password: process.env.mcPw,
                 version: false
