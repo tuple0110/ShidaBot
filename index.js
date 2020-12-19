@@ -158,12 +158,12 @@ async function playMafia() {
     while (true) {
         await delay(10000);
         bot.chat("■ 지금부터 투표로 마피아로 의심되는 사람 한 명을 뽑겠습니다.");
-        await delay(8000);
-        bot.chat("■ 뽑을 사람의 닉네임을 채팅으로 말해주세요. (35초)");
         for (var i in players) {
             players[i][2] = true;
             players[i][3] = 0;
         }
+        await delay(8000);
+        bot.chat("■ 뽑을 사람의 닉네임을 채팅으로 말해주세요. (35초)");
         await delay(35000);
         for (var i in players) {
             players[i][2] = false;
@@ -333,6 +333,13 @@ client.on("message", (message) => {
                         }
                     });
                 }, 10000);
+                bot.on("playerLeft", (user) => {
+                    if (owners.filter(a => Object.keys(bot.players).includes(a)) > 0) {
+                        bot.chat("퇴근");
+                        connected = false;
+                        bot.quit();
+                    }
+                });
                 bot.chat("ㅎㅇ '시다야'라고 부르셈");
                 const mcData = require("minecraft-data")(bot.version);
                 const defaultMove = new Movements(bot, mcData);
