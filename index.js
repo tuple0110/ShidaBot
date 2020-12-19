@@ -13,7 +13,8 @@ const Discord = require("discord.js");
 const client = new Discord.Client();
 let messenger;
 client.once('ready', () => {
-    messenger = client.channels.cache.get("779936157814226974");
+    messenger = client.channels.cache.get("789720071433093180");
+    messenger.send("나 왔다");
 });
 const JsonBinIoApi = require("jsonbin-io-api");
 const api = new JsonBinIoApi(process.env.jsonToken);
