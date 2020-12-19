@@ -348,8 +348,12 @@ client.on("message", (message) => {
                             case /^시다야 커맨드 추가/.test(message):
                                 rawInput = message.split(" ");
                                 if (rawInput.length >= 5) {
-                                    bot.chat("ㅇ");
-                                    dialog[rawInput[3]] = rawInput.slice(4).join(" ");
+                                    if (rawInput.slice(4).join(" ").length <= 30) {
+                                        dialog[rawInput[3]] = rawInput.slice(4).join(" ");
+                                        bot.chat("ㅇ");
+                                    } else {
+                                        bot.chat("너무 김 그걸 어케 외워");
+                                    }
                                     saveData();
                                 } else {
                                     bot.chat("어쩌라는거지");
