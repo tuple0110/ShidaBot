@@ -335,7 +335,7 @@ client.on("message", (message) => {
                     });
                 }, 10000);
                 bot.on("playerLeft", (user) => {
-                    if (owners.filter(a => Object.keys(bot.players).includes(a)).length > 0) {
+                    if (owners.filter(a => (Object.keys(bot.players).includes(a))).length > 0) {
                         bot.chat("퇴근");
                         connected = false;
                         bot.quit();
