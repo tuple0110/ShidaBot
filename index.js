@@ -3,10 +3,10 @@ let connected = false;
 var bot;
 
 const mineflayer = require("mineflayer");
-//const pathfinder = require('mineflayer-pathfinder').pathfinder
-//const Movements = require('mineflayer-pathfinder').Movements
-//const { GoalNear } = require('mineflayer-pathfinder').goals
-//const mineflayerViewer = require("prismarine-viewer").mineflayer;
+const pathfinder = require('mineflayer-pathfinder').pathfinder
+const Movements = require('mineflayer-pathfinder').Movements
+const { GoalNear } = require('mineflayer-pathfinder').goals
+const mineflayerViewer = require("prismarine-viewer").mineflayer;
 const Vec3 = require("vec3");
 
 const Discord = require("discord.js");
@@ -18,7 +18,7 @@ client.once('ready', () => {
 const JsonBinIoApi = require("jsonbin-io-api");
 const api = new JsonBinIoApi(process.env.jsonToken);
 
-//const math = require("mathjs");
+const math = require("mathjs");
 
 let place = {};
 let owners = {};
