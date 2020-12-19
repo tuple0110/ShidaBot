@@ -376,6 +376,7 @@ client.on("message", (message) => {
                                 }
                                 break;
                             case /^시다야 나가/.test(message):
+                                connected = false;
                                 bot.quit();
                                 break;
                             case /^시다야/.test(message):
