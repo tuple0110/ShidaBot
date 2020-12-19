@@ -6,7 +6,7 @@ const mineflayer = require("mineflayer");
 const pathfinder = require('mineflayer-pathfinder').pathfinder
 const Movements = require('mineflayer-pathfinder').Movements
 const { GoalNear } = require('mineflayer-pathfinder').goals
-const mineflayerViewer = require("prismarine-viewer").mineflayer;
+//const mineflayerViewer = require("prismarine-viewer").mineflayer;
 const Vec3 = require("vec3");
 
 const Discord = require("discord.js");
