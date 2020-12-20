@@ -219,7 +219,7 @@ async function playMafia() {
             if (mafia == 0) {
                 bot.chat("■ 시민 팀의 승리!");
                 playingMafia = false;
-                break;
+                return;
             }
             if (Object.keys(players).length / 2 <= mafia) {
                 bot.chat("■ 마피아 팀의 승리!");
@@ -232,7 +232,7 @@ async function playMafia() {
                     bot.chat(`${mafiaList[0]}님, ${mafiaList[1]}님이였습니다!`);
                 }
                 playingMafia = false;
-                break;
+                return;
             }
             yield 8000;
             bot.chat(`■ ${day} 번째 밤이 되었습니다.`);
@@ -276,7 +276,7 @@ async function playMafia() {
                     bot.chat(`${mafiaList[0]}님, ${mafiaList[1]}님이였습니다!`);
                 }
                 playingMafia = false;
-                break;
+                return;
             }
             yield 8000;
             bot.chat("■ 지금부터, 여러분들께 자유롭게 대화할 시간 2분을 드립니다.");
@@ -289,7 +289,7 @@ async function playMafia() {
         while (true) {
             if (!playingMafia) {
                 bot.chat("마피아 게임이 종료되었습니다.");
-                break;
+                return;
             }
             const data = ctx.next();
             if (data.done) ctx = loop();
