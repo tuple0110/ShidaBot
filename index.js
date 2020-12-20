@@ -105,179 +105,179 @@ function delay(n) {
 }
 
 async function playMafia() {
-    try {
-        setInterval(() => {
-            if (!playingMafia) {
-                throw "";
-            }
-        }, 1000);
-        day = 1;
-        players = {};
-        mafiaList = [];
-        for (var i of playerArray) {
-            //job, HP, votingTarget, votedTarget, votingExecution, doingJob
-            players[i] = ["citizen", 0, false, 0, false];
+    playingMafia = true;
+    day = 1;
+    players = {};
+    mafiaList = [];
+    for (var i of playerArray) {
+        //job, HP, votingTarget, votedTarget, votingExecution, doingJob
+        players[i] = ["citizen", 0, false, 0, false];
+    }
+    players[playerArray[0]][0] = "cop";
+    players[playerArray[1]][0] = "doctor";
+    if (playerArray.length <= 6) {
+        mafiaList = [playerArray[2]];
+        players[playerArray[2]][0] = "mafia";
+        mafia = 1;
+    } else {
+        mafiaList = [playerArray[2], playerArray[3]];
+        players[playerArray[2]][0] = "mafia";
+        players[playerArray[3]][0] = "mafia";
+        mafia = 2;
+    }
+    bot.chat("■ 반갑습니다. 이번 마피아 게임의 사회를 맡게 된 ShidaBot입니다.");
+    await delay(8000);
+    bot.chat("■ 지금부터 여러분들의 직업을 정하도록 하겠습니다.");
+    await delay(15000);
+    for (var i in players) {
+        bot.chat(`/w ${i} ${{
+            cop: "당신은 경찰입니다. 철저한 수사를 통해 마피아를 밝혀내십시오.",
+            doctor: "당신은 의사입니다. 마피아의 공격으로부터 사람들을 살려내십시오.",
+            mafia: "당신은 마피아입니다. 은밀하게 시민들을 제거하여 마을을 장악하십시오.",
+            citizen: "당신은 시민입니다. 현명하게 시민의 권리를 행사하여 마피아 패거리로부터 마을을 지켜내십시오."
+        }[players[i][0]]}`)
+        if (mafiaList.length > 1 && players[i][0] == "mafia") {
+            bot.chat(`/w ${i} 당신의 파트너는 ${mafiaList[0] != i ? mafiaList[0] : mafiaList[1]}님입니다.`)
         }
-        players[playerArray[0]][0] = "cop";
-        players[playerArray[1]][0] = "doctor";
-        if (playerArray.length <= 6) {
-            mafiaList = [playerArray[2]];
-            players[playerArray[2]][0] = "mafia";
-            mafia = 1;
-        } else {
-            mafiaList = [playerArray[2], playerArray[3]];
-            players[playerArray[2]][0] = "mafia";
-            players[playerArray[3]][0] = "mafia";
-            mafia = 2;
-        }
-        bot.chat("■ 반갑습니다. 이번 마피아 게임의 사회를 맡게 된 ShidaBot입니다.");
-        await delay(8000);
-        bot.chat("■ 지금부터 여러분들의 직업을 정하도록 하겠습니다.");
-        await delay(15000);
+    }
+    await delay(15000);
+    bot.chat("■ 본격적인 게임을 시작하겠습니다.");
+    await delay(8000);
+    bot.chat("■ 경찰은 밤마다 한 명을 선택하여 마피아 여부를 확인할 수 있습니다. 의사는 밤마다 한 명을 마피아의 공격으로부터 살릴 수 있습니다.");
+    await delay(5000);
+    bot.chat("■ 마피아는 밤이 될 때마다 한 명을 살해할 것입니다.");
+    await delay(5000);
+    bot.chat("■ 투표를 해서 마피아를 모두 찾으면 시민의 승리.");
+    await delay(5000);
+    bot.chat("■ 시민 수가 줄어 마피아의 수와 같아지면 마피아의 승리.");
+    await delay(8000);
+    bot.chat("■ 지금부터, 여러분들께 자유롭게 대화할 시간 2분을 드립니다.");
+    bot.chat("■ 행운을 빕니다.");
+    await delay(60000);
+    bot.chat("■ 대화 시간 1분 남았습니다.");
+    await delay(50000);
+    bot.chat("■ 대화 시간 10초 남았습니다. 투표를 준비해주세요.");
+    const sleep = ms => new Promise(r => setTimeout(r, ms));
+    function* loop() {
+        yield 10000;
+        bot.chat("■ 지금부터 투표로 마피아로 의심되는 사람 한 명을 뽑겠습니다.");
         for (var i in players) {
-            bot.chat(`/w ${i} ${{
-                cop: "당신은 경찰입니다. 철저한 수사를 통해 마피아를 밝혀내십시오.",
-                doctor: "당신은 의사입니다. 마피아의 공격으로부터 사람들을 살려내십시오.",
-                mafia: "당신은 마피아입니다. 은밀하게 시민들을 제거하여 마을을 장악하십시오.",
-                citizen: "당신은 시민입니다. 현명하게 시민의 권리를 행사하여 마피아 패거리로부터 마을을 지켜내십시오."
-            }[players[i][0]]}`)
-            if (mafiaList.length > 1 && players[i][0] == "mafia") {
-                bot.chat(`/w ${i} 당신의 파트너는 ${mafiaList[0] != i ? mafiaList[0] : mafiaList[1]}님입니다.`)
+            players[i][2] = true;
+            players[i][3] = 0;
+        }
+        yield 8000;
+        bot.chat("■ 뽑을 사람의 닉네임을 채팅으로 말해주세요. (35초)");
+        yield 35000;
+        for (var i in players) {
+            players[i][2] = false;
+        }
+        target = "";
+        for (var i in players) {
+            if (players[i][3] > Object.keys(players).length / 2) {
+                target = i;
             }
         }
-        await delay(15000);
-        bot.chat("■ 본격적인 게임을 시작하겠습니다.");
-        await delay(8000);
-        bot.chat("■ 경찰은 밤마다 한 명을 선택하여 마피아 여부를 확인할 수 있습니다. 의사는 밤마다 한 명을 마피아의 공격으로부터 살릴 수 있습니다.");
-        await delay(5000);
-        bot.chat("■ 마피아는 밤이 될 때마다 한 명을 살해할 것입니다.");
-        await delay(5000);
-        bot.chat("■ 투표를 해서 마피아를 모두 찾으면 시민의 승리.");
-        await delay(5000);
-        bot.chat("■ 시민 수가 줄어 마피아의 수와 같아지면 마피아의 승리.");
-        await delay(8000);
+        if (target != "") {
+            bot.chat(`■ 가장 많은 표를 받은 ${target}님, 최후의 반론. (30초, 참가자 전원 쉿!)`);
+            yield 30000;
+            bot.chat("■ 채팅으로 처형에 찬성하시는 분은 '찬성'을, 반대하시는 분은 '반대'를 입력해주세요. (15초)");
+            for (var i in players) {
+                players[i][4] = true;
+            }
+            execution = 0;
+            yield 15000;
+            for (var i in players) {
+                players[i][4] = false;
+            }
+            if (execution > Object.keys(players).length / 2) {
+                if (players[target][0] == "mafia") {
+                    bot.chat(`■ ${target}님이 처형당했습니다. ${target}님은 마피아가 맞았습니다.`);
+                    mafia --;
+                } else {
+                    bot.chat(`■ ${target}님이 처형당했습니다. ${target}님은 마피아가 아니였습니다.`);
+                }
+                delete players[target];
+            } else {
+                bot.chat(`■ ${target}님이 처형되지 않았습니다.`);
+            }
+        } else {
+            bot.chat("■ 투표가 기권되었습니다.");
+        }
+        if (mafia == 0) {
+            bot.chat("■ 시민 팀의 승리!");
+            playingMafia = false;
+            break;
+        }
+        if (Object.keys(players).length / 2 <= mafia) {
+            bot.chat("■ 마피아 팀의 승리!");
+            yield 5000;
+            bot.chat("■ 마피아는...");
+            yield 3000;
+            if (mafiaList.length == 1) {
+                bot.chat(`${mafiaList[0]}님이였습니다!`);
+            } else {
+                bot.chat(`${mafiaList[0]}님, ${mafiaList[1]}님이였습니다!`);
+            }
+            playingMafia = false;
+            break;
+        }
+        yield 8000;
+        bot.chat(`■ ${day} 번째 밤이 되었습니다.`);
+        day ++;
+        copChoose = true;
+        doctorChoose = true;
+        mafiaChoose = true;
+        cure = "";
+        kill = "";
+        yield 8000;
+        bot.chat("■ 마피아는 제게 귓속말로, 살해할 사람의 이름을 보내주세요.");
+        yield 2000;
+        bot.chat("■ 의사는 제게 귓속말로, 치료할 사람의 이름을 보내주세요.");
+        yield 2000;
+        bot.chat("■ 경찰은 제게 귓속말로, 조사할 사람의 이름을 보내주세요.");
+        yield 5000;
+        bot.chat("■ 30초 드리겠습니다. (귓속말 보내는법: /w ShidaBot)");
+        yield 30000;
+        copChoose = false;
+        doctorChoose = false;
+        mafiaChoose = false;
+        bot.chat(`■ ${day} 번째 날 아침이 밝았습니다.`);
+        yield 8000;
+        if (kill == "") {
+            bot.chat("■ 어젯밤, 마피아의 총구는 그 누구도 겨누지 않았습니다.");
+        } else if (kill == cure) {
+            bot.chat(`■ 어젯밤, ${kill}님이 마피아의 총에 맞았으나, 의사의 치료를 받고 살아났습니다.`);
+        } else {
+            bot.chat(`■ 어젯밤, ${kill}님이 마피아의 총에 맞고 숨졌습니다.`);
+            delete players[kill];
+        }
+        yield 2000;
+        if (Object.keys(players).length / 2 <= mafia) {
+            bot.chat("■ 마피아 팀의 승리!");
+            yield 5000;
+            bot.chat("■ 마피아는...");
+            yield 3000;
+            if (mafiaList.length == 1) {
+                bot.chat(`${mafiaList[0]}님이였습니다!`);
+            } else {
+                bot.chat(`${mafiaList[0]}님, ${mafiaList[1]}님이였습니다!`);
+            }
+            playingMafia = false;
+            break;
+        }
+        yield 8000;
         bot.chat("■ 지금부터, 여러분들께 자유롭게 대화할 시간 2분을 드립니다.");
-        bot.chat("■ 행운을 빕니다.");
-        await delay(60000);
+        yield 120000;
         bot.chat("■ 대화 시간 1분 남았습니다.");
-        await delay(50000);
+        yield 50000;
         bot.chat("■ 대화 시간 10초 남았습니다. 투표를 준비해주세요.");
-        while (true) {
-            await delay(10000);
-            bot.chat("■ 지금부터 투표로 마피아로 의심되는 사람 한 명을 뽑겠습니다.");
-            for (var i in players) {
-                players[i][2] = true;
-                players[i][3] = 0;
-            }
-            await delay(8000);
-            bot.chat("■ 뽑을 사람의 닉네임을 채팅으로 말해주세요. (35초)");
-            await delay(35000);
-            for (var i in players) {
-                players[i][2] = false;
-            }
-            target = "";
-            for (var i in players) {
-                if (players[i][3] > Object.keys(players).length / 2) {
-                    target = i;
-                }
-            }
-            if (target != "") {
-                bot.chat(`■ 가장 많은 표를 받은 ${target}님, 최후의 반론. (30초, 참가자 전원 쉿!)`);
-                await delay(30000);
-                bot.chat("■ 채팅으로 처형에 찬성하시는 분은 '찬성'을, 반대하시는 분은 '반대'를 입력해주세요. (15초)");
-                for (var i in players) {
-                    players[i][4] = true;
-                }
-                execution = 0;
-                await delay(15000);
-                for (var i in players) {
-                    players[i][4] = false;
-                }
-                if (execution > Object.keys(players).length / 2) {
-                    if (players[target][0] == "mafia") {
-                        bot.chat(`■ ${target}님이 처형당했습니다. ${target}님은 마피아가 맞았습니다.`);
-                        mafia --;
-                    } else {
-                        bot.chat(`■ ${target}님이 처형당했습니다. ${target}님은 마피아가 아니였습니다.`);
-                    }
-                    delete players[target];
-                } else {
-                    bot.chat(`■ ${target}님이 처형되지 않았습니다.`);
-                }
-            } else {
-                bot.chat("■ 투표가 기권되었습니다.");
-            }
-            if (mafia == 0) {
-                bot.chat("■ 시민 팀의 승리!");
-                playingMafia = false;
-                break;
-            }
-            if (Object.keys(players).length / 2 <= mafia) {
-                bot.chat("■ 마피아 팀의 승리!");
-                await delay(5000);
-                bot.chat("■ 마피아는...");
-                await delay(3000);
-                if (mafiaList.length == 1) {
-                    bot.chat(`${mafiaList[0]}님이였습니다!`);
-                } else {
-                    bot.chat(`${mafiaList[0]}님, ${mafiaList[1]}님이였습니다!`);
-                }
-                playingMafia = false;
-                break;
-            }
-            await delay(8000);
-            bot.chat(`■ ${day} 번째 밤이 되었습니다.`);
-            day ++;
-            copChoose = true;
-            doctorChoose = true;
-            mafiaChoose = true;
-            cure = "";
-            kill = "";
-            await delay(8000);
-            bot.chat("■ 마피아는 제게 귓속말로, 살해할 사람의 이름을 보내주세요.");
-            await delay(2000);
-            bot.chat("■ 의사는 제게 귓속말로, 치료할 사람의 이름을 보내주세요.");
-            await delay(2000);
-            bot.chat("■ 경찰은 제게 귓속말로, 조사할 사람의 이름을 보내주세요.");
-            await delay(5000);
-            bot.chat("■ 30초 드리겠습니다. (귓속말 보내는법: /w ShidaBot)");
-            await delay(30000);
-            copChoose = false;
-            doctorChoose = false;
-            mafiaChoose = false;
-            bot.chat(`■ ${day} 번째 날 아침이 밝았습니다.`);
-            await delay(8000);
-            if (kill == "") {
-                bot.chat("■ 어젯밤, 마피아의 총구는 그 누구도 겨누지 않았습니다.");
-            } else if (kill == cure) {
-                bot.chat(`■ 어젯밤, ${kill}님이 마피아의 총에 맞았으나, 의사의 치료를 받고 살아났습니다.`);
-            } else {
-                bot.chat(`■ 어젯밤, ${kill}님이 마피아의 총에 맞고 숨졌습니다.`);
-                delete players[kill];
-            }
-            await delay(2000);
-            if (Object.keys(players).length / 2 <= mafia) {
-                bot.chat("■ 마피아 팀의 승리!");
-                await delay(5000);
-                bot.chat("■ 마피아는...");
-                await delay(3000);
-                if (mafiaList.length == 1) {
-                    bot.chat(`${mafiaList[0]}님이였습니다!`);
-                } else {
-                    bot.chat(`${mafiaList[0]}님, ${mafiaList[1]}님이였습니다!`);
-                }
-                playingMafia = false;
-                break;
-            }
-            await delay(8000);
-            bot.chat("■ 지금부터, 여러분들께 자유롭게 대화할 시간 2분을 드립니다.");
-            await delay(120000);
-            bot.chat("■ 대화 시간 1분 남았습니다.");
-            await delay(50000);
-            bot.chat("■ 대화 시간 10초 남았습니다. 투표를 준비해주세요.");
-        }
-    } finally {
-        bot.chat("마피아 게임이 종료되었습니다.");
+    }
+    let ctx = loop();
+    while (true) {
+        if (stopped) return;
+        const data = ctx.next();
+        if (data.done) ctx = loop();
+        else await sleep(data.value);
     }
 }
 
@@ -406,7 +406,6 @@ client.on("message", (message) => {
                                         if (playerArray.length < 4) {
                                             bot.chat("플레이어 수 부족함 ㅅㄱㅇ");
                                         } else {
-                                            playingMafia = true;
                                             playMafia();
                                         }
                                     }
