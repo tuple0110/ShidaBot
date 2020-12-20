@@ -129,6 +129,9 @@ async function playMafia() {
     await delay(8000);
     bot.chat("■ 지금부터 여러분들의 직업을 정하도록 하겠습니다.");
     await delay(15000);
+    if (!playingMafia) {
+        bot.chat("마피아 게임이 종료되었습니다.");
+    }
     for (var i in players) {
         bot.chat(`/w ${i} ${{
             cop: "당신은 경찰입니다. 철저한 수사를 통해 마피아를 밝혀내십시오.",
@@ -153,8 +156,14 @@ async function playMafia() {
     await delay(8000);
     bot.chat("■ 지금부터, 여러분들께 자유롭게 대화할 시간 2분을 드립니다.");
     bot.chat("■ 행운을 빕니다.");
+    if (!playingMafia) {
+        bot.chat("마피아 게임이 종료되었습니다.");
+    }
     await delay(60000);
     bot.chat("■ 대화 시간 1분 남았습니다.");
+    if (!playingMafia) {
+        bot.chat("마피아 게임이 종료되었습니다.");
+    }
     await delay(50000);
     bot.chat("■ 대화 시간 10초 남았습니다. 투표를 준비해주세요.");
     const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -274,7 +283,10 @@ async function playMafia() {
     }
     let ctx = loop();
     while (true) {
-        if (stopped) return;
+        if (!playingMafia) {
+            bot.chat("마피아 게임이 종료되었습니다.");
+            return;
+        }
         const data = ctx.next();
         if (data.done) ctx = loop();
         else await sleep(data.value);
