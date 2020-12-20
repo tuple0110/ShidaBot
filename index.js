@@ -131,6 +131,7 @@ async function playMafia() {
     await delay(15000);
     if (!playingMafia) {
         bot.chat("마피아 게임이 종료되었습니다.");
+        return;
     }
     for (var i in players) {
         bot.chat(`/w ${i} ${{
@@ -158,11 +159,13 @@ async function playMafia() {
     bot.chat("■ 행운을 빕니다.");
     if (!playingMafia) {
         bot.chat("마피아 게임이 종료되었습니다.");
+        return;
     }
     await delay(60000);
     bot.chat("■ 대화 시간 1분 남았습니다.");
     if (!playingMafia) {
         bot.chat("마피아 게임이 종료되었습니다.");
+        return;
     }
     await delay(50000);
     bot.chat("■ 대화 시간 10초 남았습니다. 투표를 준비해주세요.");
