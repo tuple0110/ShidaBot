@@ -1,19 +1,27 @@
 {
   "name": "shida",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "dependencies": {
     "discord.js": "^12.5.1",
     "jsonbin-io-api": "^1.0.2",
     "mathjs": "^8.1.0",
     "mineflayer": "^2.37.1",
-    "mineflayer-pathfinder": "^1.2.2"
+    "mineflayer-navigate": "^0.0.10"
   },
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tuple0110/ShidaBot.git"
+  },
+  "bugs": {
+    "url": "https://github.com/tuple0110/ShidaBot/issues"
+  },
+  "homepage": "https://github.com/tuple0110/ShidaBot#readme",
+  "description": ""
 }

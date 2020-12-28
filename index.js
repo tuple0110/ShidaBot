@@ -3,10 +3,7 @@ let connected = false;
 var bot;
 
 const mineflayer = require("mineflayer");
-const pathfinder = require('mineflayer-pathfinder').pathfinder
-const Movements = require('mineflayer-pathfinder').Movements
-const { GoalNear } = require('mineflayer-pathfinder').goals
-//const mineflayerViewer = require("prismarine-viewer").mineflayer;
+const navigatePlugin = require('mineflayer-navigate')(mineflayer);
 const Vec3 = require("vec3");
 
 const Discord = require("discord.js");
@@ -90,27 +87,6 @@ function saveData() {
         data: {"place": place, "owners": owners, "dialog": dialog},
         versioning: true
     });
-}
-
-function waitPortal(world, cb) {
-    waitPortalLoop = setInterval(() => {
-        if (bot.game.dimension == world) {
-            clearInterval(waitPortalLoop);
-            cb();
-        }
-    }, 2000);
-}
-
-function journey(path, pathIndex, cb) {
-    if (pathIndex < path.length) {
-        bot.pathfinder.goto(new GoalNear(...path[pathIndex].slice(1), 1), () => {
-            place = path[pathIndex][0];
-            saveData();
-            journey(path, pathIndex + 1, cb);
-        });
-    } else {
-        cb();
-    }
 }
 
 function delay(n) {
@@ -379,7 +355,7 @@ client.on("message", (message) => {
                 password: process.env.mcPw,
                 version: false
             });
-            bot.loadPlugin(pathfinder);
+            navigatePlugin(bot);
             bot.once('spawn', () => {
                 //mineflayerViewer(bot, { port: 3007, firstPerson: true })
                 setTimeout(() => {
@@ -399,9 +375,6 @@ client.on("message", (message) => {
                 });
                 bot.chat("ㅎㅇ '시다야'라고 부르셈");
                 const mcData = require("minecraft-data")(bot.version);
-                const defaultMove = new Movements(bot, mcData);
-                defaultMove.canDig = false;
-                bot.pathfinder.setMovements(defaultMove);
                 bot.on('chat', function (username, message) {
                     if (username == "TodoRoki__Shoto" && message.startsWith("시다야 추첨")) {
                         randomIndex = Math.floor(Math.random() * randomNumbers.length);
@@ -468,6 +441,15 @@ client.on("message", (message) => {
                                 connected = false;
                                 bot.quit();
                                 break;
+                            case /^시다야 따라와/.test(message):
+                                if (bot.players[username] && bot.players[username].entity.position.distanceTo(bot.entity.position) < 5) {
+                                    bot.navigate.to(bot.players[username].entity.position);
+                                } else {
+                                    bot.chat("어딘데;");
+                                }
+                                break;
+                            case /^시다야 멈춰/.test(message):
+                                bot.navigate.stop();
                             case /^시다야/.test(message):
                                 command = message.split(" ")[1] ? message.split(" ")[1] : undefined;
                                 if (dialog[command] != undefined) {
