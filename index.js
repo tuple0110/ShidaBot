@@ -448,8 +448,10 @@ client.on("message", (message) => {
                                 if (bot.players[username] && bot.players[username].entity.position.distanceTo(bot.entity.position) < 5) {
                                     bot.navigate.to(bot.players[username].entity.position);
                                     bot.navigate.on("arrived", () => {
-                                        if (following) {
-                                            bot.navigate.to(bot.players[username].entity.position);
+                                        if (following && bot.players[username] && bot.players[username].entity.position.distanceTo(bot.entity.position) < 5) {
+                                            setTimeout(() => {
+                                                bot.navigate.to(bot.players[username].entity.position);
+                                            }, 500);
                                         }
                                     });
                                 } else {
@@ -459,6 +461,7 @@ client.on("message", (message) => {
                             case /^시다야 멈춰/.test(message):
                                 following = false;
                                 bot.navigate.stop();
+                                break;
                             case /^시다야/.test(message):
                                 command = message.split(" ")[1] ? message.split(" ")[1] : undefined;
                                 if (dialog[command] != undefined) {
