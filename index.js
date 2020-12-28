@@ -445,10 +445,10 @@ client.on("message", (message) => {
                                 break;
                             case /^시다야 따라와/.test(message):
                                 following = true;
-                                if (bot.players[username] && bot.players[username].entity.position.distanceTo(bot.entity.position) < 5) {
+                                if (bot.players[username].entity && bot.players[username].entity.position.distanceTo(bot.entity.position) < 5) {
                                     bot.navigate.to(bot.players[username].entity.position);
                                     bot.navigate.on("arrived", () => {
-                                        if (following && bot.players[username] && bot.players[username].entity.position.distanceTo(bot.entity.position) < 5) {
+                                        if (following && bot.players[username].entity) {
                                             setTimeout(() => {
                                                 bot.navigate.to(bot.players[username].entity.position);
                                             }, 500);
