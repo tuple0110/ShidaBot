@@ -446,22 +446,19 @@ client.on("message", (message) => {
                             case /^시다야 따라와/.test(message):
                                 following = true;
                                 if (bot.players[username] && bot.players[username].entity.position.distanceTo(bot.entity.position) < 5) {
-                                    followLoop = setInterval(() => {
+                                    bot.navigate.to(bot.players[username].entity.position);
+                                    bot.navigate.on("arrived", () => {
                                         if (following) {
-                                            if (bot.players[username] && bot.players[username].entity.position.distanceTo(bot.entity.position) < 5) {
-                                                bot.navigate.to(bot.players[username].entity.position);
-                                            }
-                                        } else {
-                                            bot.navigate.stop();
-                                            clearInterval(followLoop);
+                                            bot.navigate.to(bot.players[username].entity.position);
                                         }
-                                    }, 200);
+                                    });
                                 } else {
                                     bot.chat("어딘데;");
                                 }
                                 break;
                             case /^시다야 멈춰/.test(message):
                                 following = false;
+                                bot.navigate.stop();
                             case /^시다야/.test(message):
                                 command = message.split(" ")[1] ? message.split(" ")[1] : undefined;
                                 if (dialog[command] != undefined) {
