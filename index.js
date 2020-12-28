@@ -81,6 +81,8 @@ let impostorCoolTime = false;
 
 let randomNumbers = [...Array(81).keys()];
 
+let following = false;
+
 function saveData() {
     api.updateBin({
         id: "5fb8d7c504be4f05c9286f33",
@@ -442,14 +444,22 @@ client.on("message", (message) => {
                                 bot.quit();
                                 break;
                             case /^시다야 따라와/.test(message):
+                                following = true;
                                 if (bot.players[username] && bot.players[username].entity.position.distanceTo(bot.entity.position) < 5) {
-                                    bot.navigate.to(bot.players[username].entity.position);
+                                    followLoop = setInterval(() => {
+                                        if (following) {
+                                            bot.navigate.to(bot.players[username].entity.position);
+                                        } else {
+                                            bot.navigate.stop();
+                                            clearInterval(followLoop);
+                                        }
+                                    }, 1000);
                                 } else {
                                     bot.chat("어딘데;");
                                 }
                                 break;
                             case /^시다야 멈춰/.test(message):
-                                bot.navigate.stop();
+                                following = false;
                             case /^시다야/.test(message):
                                 command = message.split(" ")[1] ? message.split(" ")[1] : undefined;
                                 if (dialog[command] != undefined) {
