@@ -448,12 +448,14 @@ client.on("message", (message) => {
                                 if (bot.players[username] && bot.players[username].entity.position.distanceTo(bot.entity.position) < 5) {
                                     followLoop = setInterval(() => {
                                         if (following) {
-                                            bot.navigate.to(bot.players[username].entity.position);
+                                            if (bot.players[username] && bot.players[username].entity.position.distanceTo(bot.entity.position) < 5) {
+                                                bot.navigate.to(bot.players[username].entity.position);
+                                            }
                                         } else {
                                             bot.navigate.stop();
                                             clearInterval(followLoop);
                                         }
-                                    }, 1000);
+                                    }, 200);
                                 } else {
                                     bot.chat("어딘데;");
                                 }
