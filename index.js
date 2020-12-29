@@ -363,7 +363,7 @@ client.on("message", (message) => {
                 bot.loadPlugin(pathfinder);
                 const mcData = require("minecraft-data")(bot.version);
                 const movements = new Movements(bot, mcData);
-                bot.on("goal_reached", () => {
+                bot.pathfinder.on("goal_reached", () => {
                     if (following) {
                         goal = new GoalFollow(bot.players[username].entity);
                         bot.pathfinder.setGoal(goal, true);
