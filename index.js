@@ -368,13 +368,6 @@ client.on("message", (message) => {
                         }
                     });
                 }, 10000);
-                bot.on("playerLeft", (user) => {
-                    if (owners.filter(a => (Object.keys(bot.players).includes(a))).length == 0) {
-                        bot.chat("퇴근");
-                        connected = false;
-                        bot.quit();
-                    }
-                });
                 bot.chat("ㅎㅇ '시다야'라고 부르셈");
                 const mcData = require("minecraft-data")(bot.version);
                 bot.on('chat', function (username, message) {
