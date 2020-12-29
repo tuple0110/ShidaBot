@@ -3,8 +3,9 @@ let connected = false;
 var bot;
 
 const mineflayer = require("mineflayer");
-const navigatePlugin = require('mineflayer-navigate')(mineflayer);
+const {pathfinder, Movements, goals} = require("mineflayer-pathfinder");
 const Vec3 = require("vec3");
+const GoalFollow = goals.GoalFollow;
 
 const Discord = require("discord.js");
 const client = new Discord.Client();
@@ -357,8 +358,10 @@ client.on("message", (message) => {
                 password: process.env.mcPw,
                 version: false
             });
-            navigatePlugin(bot);
             bot.once('spawn', () => {
+                bot.loadPlugin(pathfinder);
+                const mcData = require("minecraft-data")(bot.version);
+                const movements = new Movements(bot, mcData);
                 //mineflayerViewer(bot, { port: 3007, firstPerson: true })
                 setTimeout(() => {
                     bot.on("playerJoined", (user) => {
@@ -369,7 +372,6 @@ client.on("message", (message) => {
                     });
                 }, 10000);
                 bot.chat("ㅎㅇ '시다야'라고 부르셈");
-                const mcData = require("minecraft-data")(bot.version);
                 bot.on('chat', function (username, message) {
                     if (username == "TodoRoki__Shoto" && message.startsWith("시다야 추첨")) {
                         randomIndex = Math.floor(Math.random() * randomNumbers.length);
@@ -439,14 +441,9 @@ client.on("message", (message) => {
                             case /^시다야 따라와/.test(message):
                                 following = true;
                                 if (bot.players[username].entity && bot.players[username].entity.position.distanceTo(bot.entity.position) < 5) {
-                                    bot.navigate.to(bot.players[username].entity.position);
-                                    bot.navigate.on("arrived", () => {
-                                        if (following && bot.players[username].entity) {
-                                            setTimeout(() => {
-                                                bot.navigate.to(bot.players[username].entity.position);
-                                            }, 500);
-                                        }
-                                    });
+                                    bot.pathfinder.setMovements(movements);
+                                    const goal = new GoalFollow(bot.players[username].entity);
+                                    bot.pathfinder.setGoal(goal, true);
                                 } else {
                                     bot.chat("어딘데;");
                                 }
