@@ -21,17 +21,18 @@ const api = new JsonBinIoApi(process.env.jsonToken);
 
 const math = require("mathjs");
 
-let place = {};
-let owners = {};
-let dialog = {};
+let place;
+let owners;
+let dialog;
 api.readBin({
     id: "5fb8d7c504be4f05c9286f33",
     version: "latest"
 }).then((data) => {
+    console.log(data);
     place = data.place;
     owners = data.owners;
     dialog = data.dialog;
-    console.log(place, owners, dialog);
+    messenger.send("나 왔다 2");
 });
 
 let execution = 0;
@@ -362,6 +363,12 @@ client.on("message", (message) => {
                 bot.loadPlugin(pathfinder);
                 const mcData = require("minecraft-data")(bot.version);
                 const movements = new Movements(bot, mcData);
+                bot.on("goal_reached", () => {
+                    if (following) {
+                        goal = new GoalFollow(bot.players[username].entity);
+                        bot.pathfinder.setGoal(goal, true);
+                    }
+                });
                 //mineflayerViewer(bot, { port: 3007, firstPerson: true })
                 setTimeout(() => {
                     bot.on("playerJoined", (user) => {
@@ -440,9 +447,9 @@ client.on("message", (message) => {
                                 break;
                             case /^시다야 따라와/.test(message):
                                 following = true;
-                                if (bot.players[username].entity && bot.players[username].entity.position.distanceTo(bot.entity.position) < 5) {
+                                if (username == "Bot_Shida" && bot.players[username].entity && bot.players[username].entity.position.distanceTo(bot.entity.position) < 5) {
                                     bot.pathfinder.setMovements(movements);
-                                    const goal = new GoalFollow(bot.players[username].entity);
+                                    goal = new GoalFollow(bot.players[username].entity);
                                     bot.pathfinder.setGoal(goal, true);
                                 } else {
                                     bot.chat("어딘데;");
@@ -450,7 +457,6 @@ client.on("message", (message) => {
                                 break;
                             case /^시다야 멈춰/.test(message):
                                 following = false;
-                                bot.navigate.stop();
                                 break;
                             case /^시다야/.test(message):
                                 command = message.split(" ")[1] ? message.split(" ")[1] : undefined;
