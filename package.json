@@ -6,8 +6,9 @@
     "discord.js": "^12.5.1",
     "jsonbin-io-api": "^1.0.2",
     "mathjs": "^8.1.0",
+    "minecraft-data": "^2.71.0",
     "mineflayer": "^2.37.1",
-    "mineflayer-navigate": "^0.0.10"
+    "mineflayer-pathfinder": "^1.2.3"
   },
   "devDependencies": {},
   "scripts": {
